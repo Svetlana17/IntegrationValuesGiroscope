@@ -18,7 +18,7 @@ import static java.lang.Math.sqrt;
 
 public class MainActivity extends AppCompatActivity  implements SensorEventListener {
     TextView textX, textY, textZ;
-    TextView tv_accX, tv_accY, tv_accZ;
+    TextView tv_accX, tv_accY, tv_accZ, alpha_text, betta_text, gamma_text;
     TextView tv_or_0, tv_or_1, tv_or_2, tv_or_3;//++
     SensorManager gyroManager, accManager;
     Sensor gyroSensor, accSensor;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
     //вычисление угла поворота по гироскопу
     float alpha, betta, gamma;
 
-
+   // TextView ;
     private final float[] deltaRotationVector = new float[4];//+++
     private long timestamp;//+++
     @Override
@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
         tv_or_2 = (TextView) findViewById(R.id.OrintZ);////++++++
         tv_or_3 = (TextView) findViewById(R.id.Orint4);//+++
 
+
+        alpha_text = (TextView) findViewById(R.id.alpha);
+        betta_text = (TextView) findViewById(R.id.betta);
+        gamma_text = (TextView) findViewById(R.id.gamma);
 
 
 
@@ -145,10 +149,28 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
             float y = event.values[1];
             float z = event.values[2];
 
+            // Вычисление угла наклона по акслерометру
+            float  alpha_t= (float) (x/(sqrt((y*y)+(z*z))));
+            float betta_t = (float) (y/(sqrt((x*x)+z*z)));
+            float gamma_t = (float) (z/(sqrt(x*x)+(y*y)));
+            //
             tv_accX.setText("X Acc : " + x + " m/s2");
             tv_accY.setText("Y Acc: " + y + " m/s2");
             tv_accZ.setText("Z Acc: " + z + " m/s2");
+
+
+
+            alpha_text.setText("Угол alpha:" + alpha_t);
+            betta_text.setText("Угол B:" + betta_t);
+            gamma_text.setText("Угол гама:" + gamma_t);
+
         }
+
+
+
+
+
+
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {

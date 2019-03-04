@@ -7,10 +7,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import static android.util.Half.EPSILON;
 import static java.lang.Math.cos;
+import static java.lang.Math.floor;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
@@ -21,31 +23,37 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
     SensorManager gyroManager, accManager;
     Sensor gyroSensor, accSensor;
     private static final float NS2S = 1.0f / 1000000000.0f;//+++
+    //вычисление угла поворота по гироскопу
+    float alpha, betta, gamma;
+
 
     private final float[] deltaRotationVector = new float[4];//+++
     private long timestamp;//+++
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+      //  setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_scroll);
+        ImageView imageView = (ImageView) findViewById(R.id.icon);
+        imageView.setImageResource(R.drawable.icon72);
         gyroManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gyroSensor = gyroManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
         accManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accSensor = accManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        textX = (TextView) findViewById(R.id.textX);
-        textY = (TextView) findViewById(R.id.textY);
-        textZ = (TextView) findViewById(R.id.textZ);
+        textX = (TextView) findViewById(R.id.GirtextX);
+        textY = (TextView) findViewById(R.id.GirtextY);
+        textZ = (TextView) findViewById(R.id.GirtextZ);
 
-        tv_accX = (TextView) findViewById(R.id.accX);
-        tv_accY = (TextView)findViewById(R.id.accY);
-        tv_accZ = (TextView) findViewById(R.id.accZ);
+        tv_accX = (TextView) findViewById(R.id.AcctextX);
+        tv_accY = (TextView)findViewById(R.id.AcctextY);
+        tv_accZ = (TextView) findViewById(R.id.AcctextZ);
 
-        tv_or_0 = (TextView) findViewById(R.id.orX);//+++
-        tv_or_1 = (TextView) findViewById(R.id.orY);//+++
-        tv_or_2 = (TextView) findViewById(R.id.orZ);////++++++
-        tv_or_3 = (TextView) findViewById(R.id.or4);//+++
+        tv_or_0 = (TextView) findViewById(R.id.OrintX);//+++
+        tv_or_1 = (TextView) findViewById(R.id.OrintY);//+++
+        tv_or_2 = (TextView) findViewById(R.id.OrintZ);////++++++
+        tv_or_3 = (TextView) findViewById(R.id.Orint4);//+++
 
 
 
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
 
             if (timestamp != 0) {//++
                 final float dT = (event.timestamp - timestamp) * NS2S;//+++
+                float alpha, betta, gamma;
                 float axisX = event.values[0];//+++
                 float axisY = event.values[1];//+++
                 float axisZ = event.values[2];//+++
@@ -105,6 +114,10 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
                 deltaRotationVector[1] = sinThetaOverTwo * axisY;//+++
                 deltaRotationVector[2] = sinThetaOverTwo * axisZ;//+++
                 deltaRotationVector[3] = cosThetaOverTwo;//+++
+
+                 alpha=axisX*dT;
+                 betta=axisY*dT;
+                 gamma = axisZ * dT;
 
             }
             timestamp = event.timestamp;//+++
